@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>台本タイプ診断｜あなたの台本はラブレターになっていますか？</title>
+<style>
+  :root{
+    --paper:#FBF5F1;
+    --card:#FFFFFF;
+    --ink:#40343A;
+    --ink-soft:#8A7B80;
+    --rose:#B04A5A;
+    --rose-deep:#933B4A;
+    --rose-soft:#F3DEDF;
+    --gold:#C08A2D;
+    --line:#EADDD8;
+  }
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",sans-serif;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{
+    max-width:560px;
+    margin:0 auto;
+    padding:32px 20px 72px;
+  }
+  .brand{
+    text-align:center;
+    font-size:12px;
+    letter-spacing:.18em;
+    color:var(--ink-soft);
+    margin-bottom:28px;
+  }
+  .serif{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:36px 28px;
+    box-shadow:0 6px 24px rgba(64,52,58,.06);
+  }
+  h1{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-size:24px;
+    line-height:1.7;
+    text-align:center;
+    margin:0 0 8px;
+    text-wrap:balance;
+  }
+  .lead{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:14px;
+    margin:0 0 28px;
+  }
+  .seal{
+    width:56px;height:56px;
+    margin:0 auto 20px;
+    border-radius:50%;
+    background:var(--rose);
+    color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:26px;
+  }
+  .btn{
+    display:block;
+    width:100%;
+    border:0;
+    border-radius:14px;
+    padding:15px 18px;
+    font-size:15px;
+    font-family:inherit;
+    line-height:1.7;
+    cursor:pointer;
+    text-align:left;
+    transition:transform .12s ease, background .12s ease, border-color .12s ease;
+  }
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .btn-primary{
+    background:var(--rose);
+    color:#fff;
+    font-weight:600;
+    letter-spacing:.06em;
+    text-align:center;
+    border-radius:999px;
+  }
+  .btn-primary:hover{background:var(--rose-deep);}
+  .btn-choice{
+    background:#FDF9F7;
+    border:1.5px solid var(--line);
+    color:var(--ink);
+  }
+  .btn-choice:hover{
+    background:var(--rose-soft);
+    border-color:var(--rose);
+  }
+  .btn + .btn{margin-top:12px;}
+  @media (prefers-reduced-motion:no-preference){
+    .btn:active{transform:scale(.98);}
+    .fade{animation:fadein .35s ease;}
+    @keyframes fadein{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+  }
+  .progress{
+    display:flex;align-items:center;gap:12px;
+    margin-bottom:22px;
+  }
+  .progress .num{
+    font-size:12px;color:var(--ink-soft);
+    letter-spacing:.08em;
+    font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+  .bar{
+    flex:1;height:6px;border-radius:3px;
+    background:var(--rose-soft);
+    overflow:hidden;
+  }
+  .bar i{
+    display:block;height:100%;
+    background:var(--rose);
+    border-radius:3px;
+    transition:width .3s ease;
+  }
+  .benefits{
+    background:#FDF9F7;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    margin:0 0 24px;
+  }
+  .benefits .b-title{
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--rose);
+    font-weight:700;
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .benefits ul{
+    list-style:none;
+    margin:0;padding:0;
+    font-size:14.5px;
+  }
+  .benefits li{
+    padding-left:1.6em;
+    position:relative;
+  }
+  .benefits li + li{margin-top:6px;}
+  .benefits li::before{
+    content:"\2713";
+    position:absolute;left:2px;
+    color:var(--rose);
+    font-weight:700;
+  }
+  .q-label{
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--rose);
+    font-weight:700;
+    margin-bottom:12px;
+  }
+  .q-text{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-size:19px;
+    line-height:1.9;
+    margin:0 0 22px;
+  }
+  .q-note{
+    font-size:12px;color:var(--ink-soft);
+    margin:-14px 0 20px;
+  }
+  .result-type{
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .result-eyebrow{
+    font-size:12px;letter-spacing:.16em;
+    color:var(--ink-soft);margin-bottom:10px;
+  }
+  .result-name{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-size:26px;color:var(--rose-deep);
+    margin:0 0 6px;
+  }
+  .result-sub{
+    font-size:14px;color:var(--ink-soft);
+    margin:0 0 24px;
+  }
+  .emotion{
+    background:var(--rose-soft);
+    border-radius:10px;
+    padding:16px 18px;
+    text-align:center;
+    font-size:15px;
+    margin:24px 0;
+  }
+  .emotion b{color:var(--rose-deep);font-weight:700;}
+  .body-text{
+    font-size:15px;
+    white-space:pre-line;
+  }
+  .video-slot{
+    margin:28px 0;
+    border:2px dashed var(--line);
+    border-radius:12px;
+    aspect-ratio:16/9;
+    display:flex;align-items:center;justify-content:center;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:13px;
+    padding:12px;
+    background:#FDF9F7;
+  }
+  .video-slot iframe{
+    width:100%;height:100%;
+    border:0;border-radius:12px;
+  }
+  .gems{
+    text-align:center;
+    font-size:14px;
+    color:var(--gold);
+    margin:20px 0 6px;
+    letter-spacing:.2em;
+  }
+  .gems-note{
+    text-align:center;font-size:12px;
+    color:var(--ink-soft);margin-bottom:24px;
+  }
+  .cta-box{
+    margin-top:28px;
+    padding-top:24px;
+    border-top:1px solid var(--line);
+    text-align:center;
+  }
+  .cta-copy{
+    font-family:"Hiragino Mincho ProN","Yu Mincho",serif;
+    font-size:16px;
+    margin:0 0 16px;
+  }
+  .restart{
+    margin-top:28px;
+    text-align:center;
+  }
+  .restart button{
+    background:none;border:0;
+    color:var(--ink-soft);
+    font-size:13px;
+    text-decoration:underline;
+    cursor:pointer;
+    font-family:inherit;
+  }
+  .foot{
+    text-align:center;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-top:32px;
+    letter-spacing:.08em;
+  }
+</style>
+
+<div class="wrap">
+  <div class="brand">YUKINO YUKA ｜ 集まる集客&#174;</div>
+  <div id="app" class="card fade"></div>
+  <div class="foot">&#169; 雪野由香｜台本タイプ診断（試作版）</div>
+</div>
+
+<script>
+// ============ 設定 ============
+// タイプ別の解説動画（YouTubeの動画IDを入れると埋め込み表示。
+// 空のままだと「動画設置スペース」の枠を表示します）
+const VIDEO_IDS = { A:"", B:"", C:"", D:"" };
+// セミナー申込リンク（AgentMail計測リンクに差し替え）
+const CTA_URL = "#";
+
+// ============ 質問（9問・3択。gは加点先タイプ） ============
+const QUESTIONS = [
+  {
+    t:"セミナーや動画の中で質問をもらったら、あなたに一番近いのは？",
+    o:[
+      {g:"A", t:"聞かれた以上のことまで、つい丁寧に答えてしまう"},
+      {g:"B", t:"誰が聞いても分かるように、順番に説明する"},
+      {g:"C", t:"手短に答えて、あとは相手にゆだねる"}
+    ]
+  },
+  {
+    t:"台本を書き始める前、最初にすることに近いのは？",
+    o:[
+      {g:"A", t:"伝えたいこと・役立つ情報を、思いつくかぎり書き出す"},
+      {g:"B", t:"みんなが知りたいことは何かを考える"},
+      {g:"D", t:"過去の動画の反応や記録を見返してから、テーマを決める"}
+    ]
+  },
+  {
+    t:"発信の「ターゲット」、今のあなたに一番近いのは？",
+    o:[
+      {g:"B", t:"たくさんの人に届けたいから、絞りきれない"},
+      {g:"A", t:"絞ってはいるけれど、絞りきれていないと感じる"},
+      {g:"D", t:"しっかり1人に決めている"}
+    ]
+  },
+  {
+    t:"動画の最後で、一番大事にしているのは？",
+    o:[
+      {g:"A", t:"学びを持ち帰ってもらうこと。要点のおさらいは欠かせない"},
+      {g:"B", t:"感じよく終わること。見てくれた全員に感謝を伝えたい"},
+      {g:"C", t:"あと味のよさ。宣伝はさらっと、が私の美学"}
+    ]
+  },
+  {
+    t:"過去に作った台本・原稿・メモは、今どうなっている？",
+    o:[
+      {g:"A", t:"たくさん残っている。整理まではしていない"},
+      {g:"C", t:"公開したら次の1本へ。前の原稿は見返さない"},
+      {g:"D", t:"捨てずに残していて、ときどき見返している"}
+    ]
+  },
+  {
+    t:"アナリティクス（数字）との付き合い方は？",
+    o:[
+      {g:"B", t:"数字より「見た人がどう感じたか」が気になる。数字はあまり見ていない"},
+      {g:"C", t:"再生数は見る。申込やクリックの数までは、あまり見ていない"},
+      {g:"D", t:"動画を上げるたびにチェックして、気づきをメモしている"}
+    ]
+  },
+  {
+    t:"AIに台本を書かせたとき、あなたの反応に近いのは？",
+    o:[
+      {g:"A", t:"説明が足りない気がして、自分で情報を足したくなる"},
+      {g:"B", t:"きれいだけど「私じゃない誰か」が喋っている気がする"},
+      {g:"D", t:"過去の反応と見比べながら、直す場所を探す"}
+    ]
+  },
+  {
+    t:"ご案内・お誘いの文章、あなたらしい書き方は？",
+    o:[
+      {g:"A", t:"サービスの良いところを、しっかり詳しく説明する"},
+      {g:"B", t:"買わない人も嫌な気持ちにならない、角のない文章にする"},
+      {g:"C", t:"「よかったら」と控えめに添える。決めるのはお客様だから"}
+    ]
+  },
+  {
+    t:"「なぜうまくいったの？」と聞かれたら？",
+    o:[
+      {g:"B", t:"「皆さんのおかげです」。支えてくれた人の顔が浮かぶ"},
+      {g:"C", t:"「たまたまです」。自分の手柄として語るのは照れくさい"},
+      {g:"D", t:"うーん、と考え込む。ちゃんと言葉で説明したくなる"}
+    ]
+  }
+];
+
+// ============ 結果データ ============
+const RESULTS = {
+  A: {
+    name:"優等生先生タイプ",
+    sub:"ラブレターが、参考書になっています",
+    emotion:"あなたの台本に足りない感情は <b>①驚き（揺らし）</b>",
+    text:`まず、当ててみますね。
+
+あなたは、人に何か聞かれると
+聞かれた以上のことまで
+丁寧に答えてしまう人。
+
+手を抜くことに
+罪悪感がある人ですよね。
+
+先に言わせてください。
+それは欠点ではなく、
+あなたの財産です。
+
+ところが。
+台本の中では、
+この長所が裏目に出ます。
+
+良い情報は、
+お客様を満腹にさせて帰すんです。
+
+完璧な答えを渡すほど
+「相談する理由」が
+その場で消えていく。
+
+納得だけでできている台本は
+「勉強になります」で終わります。
+
+人は、納得だけでは
+申し込まないからです。
+
+原因は努力不足ではなく、
+感情を揺らす順番を
+教わっていなかっただけ。
+
+明日できる一歩はこれです。
+
+台本の冒頭から
+あいさつと自己紹介を外して、
+驚き・問い・対比のどれかを
+1つだけ置いてみてください。`
+  },
+  B: {
+    name:"みんなのお母さんタイプ",
+    sub:"ラブレターが、回覧板になっています",
+    emotion:"あなたの台本に足りない感情は <b>②共感「私のことだ」</b>",
+    text:`まず、当ててみますね。
+
+あなたは、発信するとき
+「誰かを置いてけぼりに
+していないかな」と気になる人。
+
+絞りましょうと言われるたびに
+胸がちくっとする人ですよね。
+
+先に言わせてください。
+その優しさは欠点ではなく、
+あなたの財産です。
+
+ところが。
+台本の中では、
+この長所が裏目に出ます。
+
+「皆さん」と呼ばれた瞬間、
+人は全員こう思うんです。
+
+「これは、私以外の
+誰かの話だ」って。
+
+誰も傷つけない言葉は、
+誰の心にも触れないまま
+流れていきます。
+
+絞ることは切り捨てではなく、
+「一番深く助ける一人を
+決めること」なんです。
+
+原因は優しさの欠如ではなく、
+たった一人に宛てる勇気の持ち方を
+教わっていなかっただけ。
+
+明日できる一歩はこれです。
+
+台本を書く前に、
+「誰の、どの夜に届けるか」を
+1行だけ書いてください。`
+  },
+  C: {
+    name:"奥ゆかしい職人タイプ",
+    sub:"ラブレターが、告白待ちになっています",
+    emotion:"あなたの台本に足りない感情は <b>⑦決意「今、動く理由」</b>",
+    text:`まず、当ててみますね。
+
+あなたは、本当は来てほしいのに
+しつこいと思われそうで
+案内を短く済ませてしまう人。
+
+「良いものを作れば、
+察してもらえるはず」と
+どこかで思っている人ですよね。
+
+先に言わせてください。
+その謙虚さは欠点ではなく、
+あなたの財産です。
+
+ところが。
+台本の中では、
+この長所が裏目に出ます。
+
+知っていましたか？
+
+押し売り感は、
+CTAの強さではなく
+感情の順番で決まります。
+
+そして、誘われなかったお客様は
+断ることもせず、
+そっと忘れていきます。
+
+「押さない優しさ」は、
+お客様にとっては
+「迷子にさせる不親切」に
+なっていました。
+
+原因は遠慮しすぎではなく、
+「押す意味」の伝え方を
+教わっていなかっただけ。
+
+明日できる一歩はこれです。
+
+台本のラストに、
+「今動く理由」と
+「押した先で起こること」を
+1文ずつ足してください。`
+  },
+  D: {
+    name:"コツコツ研究者タイプ",
+    sub:"あなたの台本は、原石です",
+    emotion:"足りない感情は <b>ありません</b>。足りないのは、感情を測る<b>「ものさし」</b>",
+    text:`まず、当ててみますね。
+
+あなたは、ノートやメモ、
+過去の原稿を捨てられない人。
+
+それなのに
+「なぜうまくいったの？」と
+聞かれると、
+言葉に詰まる人ですよね。
+
+先に言わせてください。
+
+その継続力と記録力は、
+この診断の中で
+いちばんの財産です。
+
+そして、驚かないでくださいね。
+
+あなたの台本に、
+足りない感情はありません。
+
+足りないのは感情ではなく、
+感情を測る「ものさし」です。
+
+自己流のPDCAは、
+「何と比べて良い悪いを
+判定するか」の基準がない
+ところで止まります。
+
+あなたの記録には、
+実はもう答えが書いてあります。
+
+ものさしを持った瞬間、
+過去の記録が全部、
+資産に変わるんです。
+
+明日できる一歩はこれです。
+
+過去の台本を1本選んで、
+「お客様のどの感情が
+動いたはずか」を
+1行で書いてみてください。`
+  }
+};
+
+const TEASER = `そして、ここから先は
+正直にお伝えします。
+
+あなたの台本の「どの行」で
+感情が切れているかは、
+実物を診ないと分かりません。
+
+さらにもうひとつ。
+
+実は全タイプ共通で、
+ほぼ全員に欠けている感情が
+もう1つあります。
+
+感情設計の
+最大エンジンなのに、です。
+
+その正体は、
+セミナーでお話しします＾＾`;
+
+// ============ ロジック ============
+const app = document.getElementById("app");
+let idx = 0;
+let score = {A:0,B:0,C:0,D:0};
+
+function showIntro(){
+  idx = 0; score = {A:0,B:0,C:0,D:0};
+  app.innerHTML = `
+    <div class="seal serif">診</div>
+    <h1>あなたの台本は、<br>ラブレターに<br>なっていますか？</h1>
+    <p class="lead">がんばって作った動画から<br>申し込みが入らないのには、<br>性格ごとの「理由」があります。</p>
+    <div class="benefits">
+      <div class="b-title">この診断でわかること</div>
+      <ul>
+        <li>あなたの台本タイプ（全4タイプ）</li>
+        <li>あなたの台本に足りない「感情」</li>
+        <li>明日、最初に直すべき1点</li>
+        <li>あなたの原石度（伸びしろの証明）</li>
+      </ul>
+    </div>
+    <p class="lead">一番近い答えを選ぶだけ・9問・約2分</p>
+    <button class="btn btn-primary" onclick="showQuestion()">診断をはじめる</button>
+  `;
+}
+
+function showQuestion(){
+  const q = QUESTIONS[idx];
+  const pct = Math.round(idx / QUESTIONS.length * 100);
+  const buttons = q.o.map((op,i) =>
+    `<button class="btn btn-choice" onclick="answer(${i})">${op.t}</button>`
+  ).join("");
+  app.innerHTML = `
+    <div class="progress">
+      <span class="num">${idx+1} / ${QUESTIONS.length}</span>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+    </div>
+    <div class="q-label">QUESTION ${idx+1}</div>
+    <p class="q-text">${q.t}</p>
+    <p class="q-note">一番近いものを選んでください</p>
+    ${buttons}
+  `;
+  app.classList.remove("fade"); void app.offsetWidth; app.classList.add("fade");
+}
+
+function answer(i){
+  score[QUESTIONS[idx].o[i].g]++;
+  idx++;
+  if(idx < QUESTIONS.length){ showQuestion(); } else { showResult(); }
+}
+
+function judge(){
+  const {A,B,C,D} = score;
+  // 研究者（原石）は、Dを3回以上選び、かつA・B・Cのどれよりも多いか同数のとき
+  const maxABC = Math.max(A,B,C);
+  if(D >= 3 && D >= maxABC) return "D";
+  if(A >= B && A >= C) return "A";
+  if(B >= C) return "B";
+  return "C";
+}
+
+function showResult(){
+  const type = judge();
+  const r = RESULTS[type];
+  const d = Math.min(score.D, 3);
+  const gems = "&#9670;".repeat(d) + "&#9671;".repeat(3-d);
+  const video = VIDEO_IDS[type]
+    ? `<iframe src="https://www.youtube-nocookie.com/embed/${VIDEO_IDS[type]}" title="タイプ解説動画" allowfullscreen></iframe>`
+    : `ここにタイプ別の解説動画が入ります<br>（YouTube限定公開の埋め込み）`;
+  app.innerHTML = `
+    <div class="result-type">
+      <div class="result-eyebrow">診断結果</div>
+      <h2 class="result-name">${r.name}</h2>
+      <p class="result-sub">${r.sub}</p>
+    </div>
+    <div class="video-slot">${video}</div>
+    <div class="emotion">${r.emotion}</div>
+    <div class="body-text serif">${r.text}</div>
+    <div class="gems">${gems}</div>
+    <div class="gems-note">あなたの原石度：${d}／3（記録と蓄積の力）</div>
+    <div class="body-text serif">${TEASER}</div>
+    <div class="cta-box">
+      <p class="cta-copy">＼あなたの過去の台本が生まれ変わる／<br>動画台本添削プロンプト<br>徹底活用セミナー</p>
+      <a class="btn btn-primary" style="text-decoration:none;box-sizing:border-box;" href="${CTA_URL}">セミナーの詳細を見る</a>
+    </div>
+    <div class="restart"><button onclick="showIntro()">もう一度診断する</button></div>
+  `;
+  app.classList.remove("fade"); void app.offsetWidth; app.classList.add("fade");
+}
+
+showIntro();
+</script>
+
+</html>

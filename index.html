@@ -424,11 +424,9 @@ const RESULTS = {
 台本の中では、
 この長所が「裏目」に出ます。`,
     gate:[
-      "この長所が裏目に出る「正体」",
-      "あなたの台本に足りない感情の名前",
-      "明日、最初に直すべき1点",
-      "優等生先生タイプ専用の解説動画",
-      "Claude Codeで作る台本作りの小冊子2冊"
+      "お客様の心が動く「感情設計5ステップ」の小冊子（この診断限定）",
+      "優等生先生タイプの、より詳しい診断結果",
+      "明日から届く、選ばれる台本への直し方レッスン（1日1つ）"
     ]
   },
   B: {
@@ -457,11 +455,9 @@ const RESULTS = {
 台本の中では、
 この長所が「裏目」に出ます。`,
     gate:[
-      "この長所が裏目に出る「正体」",
-      "あなたの台本に足りない感情の名前",
-      "明日、最初に直すべき1点",
-      "みんなのお母さんタイプ専用の解説動画",
-      "Claude Codeで作る台本作りの小冊子2冊"
+      "お客様の心が動く「感情設計5ステップ」の小冊子（この診断限定）",
+      "みんなのお母さんタイプの、より詳しい診断結果",
+      "明日から届く、選ばれる台本への直し方レッスン（1日1つ）"
     ]
   },
   C: {
@@ -491,11 +487,9 @@ const RESULTS = {
 台本の中では、
 この長所が「裏目」に出ます。`,
     gate:[
-      "この長所が裏目に出る「正体」",
-      "あなたの台本に足りない感情の名前",
-      "明日、最初に直すべき1点",
-      "奥ゆかしい職人タイプ専用の解説動画",
-      "Claude Codeで作る台本作りの小冊子2冊"
+      "お客様の心が動く「感情設計5ステップ」の小冊子（この診断限定）",
+      "奥ゆかしい職人タイプの、より詳しい診断結果",
+      "明日から届く、選ばれる台本への直し方レッスン（1日1つ）"
     ]
   },
   D: {
@@ -523,11 +517,9 @@ const RESULTS = {
 ほかの3タイプと違う
 「特別な結果」が出ています。`,
     gate:[
-      "特別な結果の正体（足りない感情の答え）",
-      "記録が全部資産に変わる「ものさし」の話",
-      "明日、最初に直すべき1点",
-      "コツコツ研究者タイプ専用の解説動画",
-      "Claude Codeで作る台本作りの小冊子2冊"
+      "お客様の心が動く「感情設計5ステップ」の小冊子（この診断限定・あなたのものさし）",
+      "コツコツ研究者タイプの、より詳しい診断結果",
+      "明日から届く、選ばれる台本への直し方レッスン（1日1つ）"
     ]
   }
 };
@@ -604,7 +596,7 @@ function videoBlock(type, r){
 function formBlock(type, r){
   return `
     <div class="am-embed">
-      <p class="am-lead">より詳しい診断結果と小冊子2冊を<br>メールでお届けします</p>
+      <p class="am-lead">より詳しい診断結果と<br>「感情設計5ステップ」の小冊子を<br>メールでお届けします</p>
       <form action="${FORM_POST}" method="post" onsubmit="return amGuard(this)">
         <input type="hidden" name="AGENTMAIL__formid" value="${FORM_TOKENS[type]}">
         <input type="hidden" name="AGENTMAIL__formpagereferer" value="">
@@ -612,7 +604,7 @@ function formBlock(type, r){
         <input type="hidden" name="AGENTMAIL__landingePageAccessId" value="">
         <input type="hidden" name="AGENTMAIL__formpageurl" value="">
         <input class="am-input" type="email" name="AGENTMAIL__mailaddress" required placeholder="メールアドレスを入力">
-        <button class="btn btn-primary am-btn" type="submit">${r.name}専用の解説を受け取る<br><span style="font-size:12px;font-weight:400;">（無料・小冊子2冊プレゼント付き）</span></button>
+        <button class="btn btn-primary am-btn" type="submit">${r.name}専用の解説を受け取る<br><span style="font-size:12px;font-weight:400;">（無料・感情設計の小冊子プレゼント付き）</span></button>
       </form>
       <p class="am-alt"><a href="${FORM_URLS[type]}">フォームがうまく動かない方はこちら</a></p>
     </div>`;

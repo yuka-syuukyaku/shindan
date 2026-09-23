@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>私のビジネス設計図メーカー</title>
+<style>
+  :root{
+    --navy:#1e2761;
+    --purple:#7b61c9;
+    --lav:#ece7f9;
+    --mist:#f4f6fc;
+    --pink:#ee2a7b;
+    --ink:#1e2761;
+    --sub:#6b7280;
+    --line:#e3e0f2;
+    --bg:#ffffff;
+    --chip:#ffffff;
+  }
+  *{box-sizing:border-box;-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    line-height:1.8;font-size:16px;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:24px 16px 72px;}
+  h1{font-size:22px;line-height:1.5;margin:0 0 6px;}
+  .lead{color:var(--purple);font-size:14px;margin:0 0 20px;}
+  .card{background:var(--mist);border-radius:18px;padding:20px 18px;margin:0 0 18px;}
+  .card.lav{background:var(--lav);}
+  .muted{color:var(--sub);font-size:13px;line-height:1.7;}
+  .btn{display:block;width:100%;border:0;border-radius:999px;padding:15px 18px;
+    font-size:16px;font-weight:600;background:var(--navy);color:#fff;cursor:pointer;
+    font-family:inherit;margin:10px 0 0;}
+  .btn.sub{background:var(--chip);color:var(--navy);border:1.5px solid var(--line);font-weight:500;}
+  .btn.ghost{background:transparent;color:var(--purple);font-weight:500;padding:10px;}
+  .btn:active{opacity:.85;}
+  .row{display:flex;gap:10px;}
+  .row .btn{margin-top:0;}
+  .bar{height:6px;background:var(--lav);border-radius:99px;overflow:hidden;margin:4px 0 16px;}
+  .bar span{display:block;height:100%;background:var(--purple);width:0;transition:width .25s;}
+  .count{font-size:13px;color:var(--purple);margin:0 0 6px;}
+  .q{font-size:19px;font-weight:600;line-height:1.6;margin:0 0 10px;}
+  .hint{font-size:13.5px;color:var(--sub);background:var(--mist);border-radius:12px;padding:12px 14px;margin:0 0 14px;}
+  textarea{width:100%;min-height:104px;border:1.5px solid var(--line);border-radius:14px;
+    padding:14px;font-size:16px;font-family:inherit;line-height:1.7;color:var(--ink);
+    background:var(--chip);resize:vertical;}
+  textarea:focus{outline:none;border-color:var(--purple);}
+  .choice{display:block;width:100%;text-align:left;background:var(--chip);color:var(--ink);
+    border:1.5px solid var(--line);border-radius:14px;padding:13px 16px;font-size:16px;
+    font-family:inherit;margin:0 0 8px;cursor:pointer;}
+  .choice.on{border-color:var(--purple);background:var(--lav);font-weight:600;}
+  h2.sec{font-size:17px;margin:22px 0 8px;padding-bottom:6px;border-bottom:2px solid var(--lav);}
+  .val{white-space:pre-wrap;margin:0 0 12px;}
+  .item{white-space:pre-wrap;margin:0 0 6px;font-size:15px;line-height:1.7;
+    padding-left:12px;border-left:3px solid var(--lav);}
+  .lab{display:block;font-size:12.5px;color:var(--sub);line-height:1.5;}
+  .empty{color:var(--purple);}
+  .note{font-size:13px;color:var(--sub);}
+  .gap{display:block;background:var(--chip);border:1.5px solid var(--line);color:var(--navy);
+    border-radius:12px;padding:10px 14px;font-size:14px;line-height:1.6;margin:0 0 8px;}
+  .hide{display:none;}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--navy);
+    color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;
+    transition:opacity .2s;pointer-events:none;max-width:90%;text-align:center;}
+  .toast.on{opacity:1;}
+  footer{margin-top:28px;text-align:center;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14163a;--ink:#f2f1fb;--mist:#1d2050;--lav:#272a63;--line:#3a3d7a;
+      --sub:#b9bde0;--purple:#b4a1ee;--navy:#7b61c9;--chip:#1d2050;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>私のビジネス設計図メーカー</h1>
+    <p class="lead">短い質問に答えるだけ。AIに渡す1枚ができます</p>
+  </header>
+
+  <section id="start">
+    <div class="card lav">
+      <p style="margin:0 0 10px;font-weight:600;">毎回おなじ説明を、していませんか？</p>
+      <p style="margin:0;">
+        AIに頼むたびに、自分の仕事とお客様の説明をやり直す。<br>
+        この1枚があれば、その説明が終わります。
+      </p>
+    </div>
+    <div class="card">
+      <p style="margin:0 0 8px;font-weight:600;">進め方</p>
+      <p style="margin:0 0 12px;">
+        質問は短いものばかりです。<br>
+        選ぶだけの質問もあります。<br>
+        ひとつずつ答えると、1枚ができあがります。
+      </p>
+      <p class="muted" style="margin:0;">
+        答えは、この端末の中だけに残ります。<br>
+        分からないところは、飛ばして大丈夫です。
+      </p>
+    </div>
+    <div class="card hide" id="nostore" style="background:#fff6e5;">
+      <p style="margin:0;font-weight:600;">この画面では、答えが残りません</p>
+      <p class="muted" style="margin:6px 0 0;">
+        途中でやめるときは、「とちゅうで保存」を押してください。<br>
+        保存用の文をコピーして、メモに貼っておけば、あとから戻せます。
+      </p>
+    </div>
+    <button class="btn" id="go">はじめる</button>
+    <button class="btn ghost hide" id="resume">前のつづきから</button>
+    <button class="btn ghost" id="openload">保存した文から再開する</button>
+    <div class="card hide" id="loadbox">
+      <p style="margin:0 0 8px;font-weight:600;">保存用の文を貼ってください</p>
+      <textarea id="loadtext" placeholder="保存用の文をここに貼り付けます"></textarea>
+      <button class="btn" id="doload">この文から再開する</button>
+    </div>
+  </section>
+
+  <section id="quiz" class="hide">
+    <p class="count" id="count"></p>
+    <div class="bar"><span id="barfill"></span></div>
+    <p class="q" id="qtext"></p>
+    <div class="hint" id="qhint"></div>
+    <div id="choices"></div>
+    <textarea id="ans" placeholder="ここに書いてください"></textarea>
+    <button class="btn" id="next">次へ</button>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn sub" id="back">戻る</button>
+      <button class="btn sub" id="skip">飛ばす</button>
+    </div>
+    <button class="btn ghost" id="keepnow">とちゅうで保存する</button>
+  </section>
+
+  <section id="result" class="hide">
+    <div class="card lav">
+      <p style="margin:0;font-weight:600;">できあがりました</p>
+      <p class="muted" style="margin:6px 0 0;">
+        この1枚を、AIとの会話のいちばん最初に貼ってください。
+      </p>
+    </div>
+    <div id="sheet"></div>
+
+    <div class="card" id="gapbox">
+      <p style="margin:0 0 8px;font-weight:600;">まだ空いているところ</p>
+      <div id="gaps"></div>
+      <p class="muted" style="margin:10px 0 0;">
+        空いたままでも使えます。埋まるほど、出てくる文章が自分に近づきます。
+      </p>
+    </div>
+
+    <button class="btn" id="copy">1枚をコピーする</button>
+    <button class="btn sub" id="polish">AIに仕上げてもらう</button>
+    <p class="muted" style="margin:8px 0 14px;">
+      1枚と、整える指示をまとめてコピーします。<br>
+      ChatGPTやClaudeに貼ると、整えた1枚と、<br>
+      プロフィール文・自己紹介・案内文が返ってきます。
+    </p>
+    <button class="btn sub" id="save">テキストで保存する</button>
+    <button class="btn sub" id="mail">雪野に見てもらう</button>
+
+    <div class="card hide" id="mailbox" style="margin-top:10px;">
+      <p style="margin:0 0 8px;font-weight:600;">1枚をコピーしました</p>
+      <p style="margin:0 0 12px;">
+        下のボタンで、メールの下書きが開きます。<br>
+        本文が空のときは、そのまま貼り付けてください。
+      </p>
+      <a class="btn" id="mailto" href="#" style="text-decoration:none;text-align:center;">メールアプリで開く</a>
+      <p class="muted" style="margin:12px 0 0;">
+        開かないときは、こちらへお送りください。<br>
+        info@belle-coach.com
+      </p>
+      <button class="btn sub" id="copyaddr" style="margin-top:8px;">あて先をコピーする</button>
+    </div>
+
+    <div class="card lav" style="margin-top:22px;">
+      <p style="margin:0 0 8px;font-weight:600;">この1枚の、次の使い道</p>
+      <p style="margin:0 0 6px;">
+        1枚をAIに渡すと、毎回の説明が終わります。<br>
+        その先は、あなたの記録をためて育てる番です。
+      </p>
+      <p class="muted" style="margin:0;">
+        やり方は、ご一緒にお渡ししている<br>
+        「第2の脳 Obsidianの育て方」に書いています。
+      </p>
+    </div>
+
+    <footer>
+      <button class="btn ghost" id="again">はじめから書き直す</button>
+    </footer>
+  </section>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var KEY = "yukino_business_sheet_v2";
+
+  var QS = [
+    // 1 セルフプロモーション
+    {id:"name", sec:1, q:"お名前を教えてください", hint:"お仕事で出している名前でどうぞ"},
+    {id:"title", sec:1, q:"今の肩書きは何ですか", hint:"例：カウンセラー／整体師／コーチ。まだ無ければ、やっていることでどうぞ"},
+    {id:"offer", sec:1, q:"あなたは、何をする人ですか", hint:"短い言葉で。例：話を聞く／体を整える／伝え方を教える"},
+    {id:"scene", sec:1, q:"それが役に立つのは、どんな場面ですか", hint:"例：子どもとの関係でつらいとき／人前で話す前"},
+
+    // 2 ペルソナ
+    {id:"age", sec:2, q:"いちばん来てほしい方の年代は", hint:"ひとりに決めてください", type:"choice",
+      choices:["20代","30代","40代","50代","60代以上"]},
+    {id:"stand", sec:2, q:"その方の立場は", hint:"いちばん近いものを1つ", type:"choice",
+      choices:["会社員","主婦・主夫","個人事業主","経営者","これから始める方","その他"]},
+    {id:"trouble", sec:2, q:"その方が今、いちばん困っていることは", hint:"1つだけ書いてください"},
+    {id:"words", sec:2, q:"その方が言いそうな言葉を、そのまま書いてください", hint:"例：「誰に相談していいか分からない」"},
+    {id:"tried", sec:2, q:"その方が、これまでに試したことは", hint:"例：本を読んだ／講座に出た／病院に行った", optional:true},
+    {id:"stuck", sec:2, q:"それでも変わらなかったのは、なぜだと思いますか", hint:"あなたの見立てでかまいません", optional:true},
+
+    // 3 パーパス
+    {id:"start", sec:3, q:"この仕事を始めたきっかけは", hint:"ひと言で大丈夫です"},
+    {id:"mypain", sec:3, q:"あなた自身が、昔つまずいたことは", hint:"同じ場所にいた経験があれば", optional:true},
+    {id:"hope", sec:3, q:"お客様に、どうなってほしいですか", hint:"例：自分で決められるようになってほしい"},
+    {id:"future", sec:3, q:"1年後、あなたはどうなっていたいですか", hint:"仕事のことでも、暮らしのことでも"},
+
+    // 4 強み
+    {id:"said", sec:4, q:"お客様から、よく言われることは", hint:"ほめ言葉でも、驚かれたことでも"},
+    {id:"diff", sec:4, q:"同じ仕事の方と、違うやり方はありますか", hint:"順番・道具・見ているところ、など"},
+    {id:"good", sec:4, q:"いちばん得意なことは", hint:"近いものを1つ", type:"choice",
+      choices:["話を聞く","仕組みを作る","教える","そばで支える","分析する","その他"]},
+
+    // 5 プロフィール
+    {id:"years", sec:5, q:"この仕事は、どれくらい続けていますか", hint:"だいたいで大丈夫です", type:"choice",
+      choices:["1年未満","1〜3年","3〜5年","5〜10年","10年以上"]},
+    {id:"lic", sec:5, q:"資格や、学んできたものはありますか", hint:"名前を並べるだけで大丈夫です", optional:true},
+    {id:"before", sec:5, q:"前のお仕事や、人に言える経験は", hint:"今の仕事につながっていなくてもかまいません", optional:true},
+
+    // 7 プロダクト
+    {id:"pname", sec:7, q:"いちばんの商品の名前は", hint:"正式な名前が無ければ、呼んでいる名前で"},
+    {id:"ptype", sec:7, q:"その形はどれですか", hint:"近いものを1つ", type:"choice",
+      choices:["個別のセッション","講座","サロン・会員制","教材","その他"]},
+    {id:"pterm", sec:7, q:"期間と回数を教えてください", hint:"例：3ヶ月・全6回／60分1回", optional:true},
+    {id:"price", sec:7, q:"金額はいくらですか", hint:"例：5,000円／15万円", optional:true},
+    {id:"bonus", sec:7, q:"その商品に、ついてくるものはありますか", hint:"特典・教材・サポートなど。無ければ飛ばしてください", optional:true},
+    {id:"pother", sec:7, q:"ほかにある商品はありますか", hint:"無ければ飛ばしてください", optional:true},
+
+    // 8 成果事例
+    {id:"chg", sec:8, q:"お客様に起きた変化を、おひとりぶん教えてください", hint:"例：親子の会話が戻った／月の売上が倍になった"},
+    {id:"chgterm", sec:8, q:"それは、どれくらいの期間でしたか", hint:"例：3ヶ月", optional:true},
+    {id:"voice", sec:8, q:"そのとき言われた言葉はありますか", hint:"そのままの言葉でどうぞ", optional:true},
+    {id:"num", sec:8, q:"数字で言えることはありますか", hint:"人数・年数・回数・金額など。無ければ飛ばしてください", optional:true}
+  ];
+
+  var SECNAME = {1:"あなたのこと", 2:"届けたい相手", 3:"この仕事をする理由",
+                 4:"あなたの強み", 5:"これまで", 7:"商品", 8:"お客様の変化"};
+
+  var data = {};
+  var i = 0;
+
+  function $(id){ return document.getElementById(id); }
+  function v(id){
+    var s = (data[id] && data[id].length) ? data[id] : "";
+    return (s === "その他") ? "" : s;
+  }
+  function tail(s){ return s.replace(/[。．.、，,\s]+$/, ""); }
+  // 文をつなぐとき、うしろの言葉と重なる語尾を落とす
+  function cut(s, arr){
+    s = tail(s);
+    for(var k=0;k<arr.length;k++){
+      var w = arr[k];
+      if(s.length > w.length && s.slice(-w.length) === w){
+        return tail(s.slice(0, s.length - w.length));
+      }
+    }
+    return s;
+  }
+
+  var storeOK = (function(){
+    try{
+      localStorage.setItem(KEY + "_t", "1");
+      localStorage.removeItem(KEY + "_t");
+      return true;
+    }catch(e){ return false; }
+  })();
+
+  function load(){
+    try{ var raw = localStorage.getItem(KEY); if(raw){ return JSON.parse(raw) || {}; } }catch(e){}
+    return {};
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){} }
+
+  // 保存用の文（どの端末でも使える持ち出し方）
+  function exportText(){
+    var out = ["# 私のビジネス設計図メーカー 保存用",
+               "# この文をまるごとコピーして、メモに貼っておいてください",
+               ""];
+    QS.forEach(function(q){
+      var val = data[q.id] || "";
+      out.push(q.id + "=" + val.replace(/\n/g, "\\n"));
+    });
+    return out.join("\n");
+  }
+  function importText(txt){
+    var got = {}, n = 0;
+    txt.split("\n").forEach(function(line){
+      if(line.indexOf("#") === 0){ return; }
+      var p = line.indexOf("=");
+      if(p < 1){ return; }
+      var id = line.slice(0, p).trim();
+      var val = line.slice(p + 1).replace(/\\n/g, "\n");
+      var ok = QS.some(function(q){ return q.id === id; });
+      if(ok && val.length){ got[id] = val; n++; }
+    });
+    return n ? got : null;
+  }
+
+  function toast(msg){
+    var t = $("toast"); t.textContent = msg; t.classList.add("on");
+    setTimeout(function(){ t.classList.remove("on"); }, 2000);
+  }
+  function show(id){
+    ["start","quiz","result"].forEach(function(s){ $(s).classList.toggle("hide", s !== id); });
+    window.scrollTo(0,0);
+  }
+
+  function draw(){
+    var item = QS[i];
+    $("count").textContent = SECNAME[item.sec] + "　" + (i+1) + " ／ " + QS.length;
+    $("barfill").style.width = (i / QS.length * 100) + "%";
+    $("qtext").textContent = item.q;
+    $("qhint").textContent = item.hint;
+    $("back").style.visibility = (i === 0) ? "hidden" : "visible";
+    $("next").textContent = (i === QS.length - 1) ? "1枚にする" : "次へ";
+    $("skip").textContent = item.optional ? "飛ばす" : "あとで書く";
+
+    var box = $("choices");
+    box.innerHTML = "";
+    if(item.type === "choice"){
+      $("ans").classList.add("hide");
+      item.choices.forEach(function(c){
+        var b = document.createElement("button");
+        b.className = "choice" + (data[item.id] === c ? " on" : "");
+        b.textContent = c;
+        b.addEventListener("click", function(){
+          data[item.id] = c; save();
+          Array.prototype.forEach.call(box.children, function(el){ el.classList.remove("on"); });
+          b.classList.add("on");
+          setTimeout(forward, 180);
+        });
+        box.appendChild(b);
+      });
+      $("next").textContent = (i === QS.length - 1) ? "1枚にする" : "選ばずに次へ";
+    }else{
+      $("ans").classList.remove("hide");
+      $("ans").value = data[item.id] || "";
+    }
+  }
+
+  function keep(){
+    var item = QS[i];
+    if(item.type !== "choice"){ data[item.id] = $("ans").value.trim(); }
+    save();
+  }
+  function forward(){
+    if(i === QS.length - 1){ result(); return; }
+    i++; draw(); window.scrollTo(0,0);
+  }
+
+  // ---- 文章にする ----
+  function join(parts){
+    return parts.filter(function(p){ return p && p.length; }).join("");
+  }
+  function lines(arr){
+    return arr.filter(function(p){ return p && p.length; }).join("\n");
+  }
+
+  function compose(sec){
+    if(sec === 1){
+      var head = join([v("name"), v("title") ? "／" + v("title") : ""]);
+      var l2 = "", l3 = "";
+      if(v("offer") && v("scene")){
+        l2 = cut(v("scene"), ["とき","時","ところ"]) + "とき、" + tail(v("offer")) + "。";
+        l3 = "それが、私の仕事です。";
+      }else if(v("offer")){
+        l2 = tail(v("offer")) + "。";
+        l3 = "それが、私の仕事です。";
+      }else if(v("scene")){
+        l2 = tail(v("scene")) + "ときに、お役に立っています。";
+      }
+      return lines([head, l2 + l3]);
+    }
+    if(sec === 2){
+      var l1 = "";
+      if(v("age") && v("stand")){ l1 = v("age") + "の" + v("stand") + "です。"; }
+      else if(v("age")){ l1 = v("age") + "の方です。"; }
+      else if(v("stand")){ l1 = v("stand") + "の方です。"; }
+      var l2 = v("trouble") ? "今いちばん困っているのは、" + cut(v("trouble"), ["こと","ところ"]) + "ことです。" : "";
+      var l3 = v("words") ? "口にする言葉は「" + tail(v("words")) + "」。" : "";
+      var l4 = v("tried") ? "これまで、" + tail(v("tried")) + "。" : "";
+      var l5 = "";
+      if(v("stuck") && v("tried")){ l5 = "それでも変わらなかったのは、" + cut(v("stuck"), ["から","ので","ため","こと"]) + "からです。"; }
+      else if(v("stuck")){ l5 = "変わらなかったのは、" + cut(v("stuck"), ["から","ので","ため","こと"]) + "からです。"; }
+      return lines([l1, l2, l3, l4, l5]);
+    }
+    if(sec === 3){
+      var l1 = v("start") ? "きっかけは、" + cut(v("start"), ["から","ので","ため","こと"]) + "ことでした。" : "";
+      var l2 = v("mypain") ? "私自身、" + cut(v("mypain"), ["という経験","経験","こと"]) + "という経験があります。" : "";
+      var l3 = v("hope") ? "だから、" + tail(v("hope")) + "。それが、この仕事をしている理由です。" : "";
+      var l4 = v("future") ? "1年後は、" + tail(v("future")) + "。そこへ向かっています。" : "";
+      return lines([l1, l2, l3, l4]);
+    }
+    if(sec === 4){
+      var l1 = v("said") ? "お客様からは、" + cut(v("said"), ["と言われます","と"]) + "と言われます。" : "";
+      var l2 = v("diff") ? "ほかと違うのは、" + cut(v("diff"), ["こと","ところ"]) + "ところです。" : "";
+      var l3 = v("good") ? "いちばん得意なのは、" + cut(v("good"), ["こと"]) + "ことです。" : "";
+      return lines([l1, l2, l3]);
+    }
+    if(sec === 5){
+      var l1 = v("years") ? "この仕事を続けて" + v("years") + "です。" : "";
+      var l2 = v("before") ? cut(v("before"), ["を経て","経て"]) + "を経て、今の仕事をしています。" : "";
+      var l3 = v("lic") ? cut(v("lic"), ["を学びました","学びました","を学んだ","学んだ"]) + "を学んできました。" : "";
+      return lines([l1, l2, l3]);
+    }
+    if(sec === 7){
+      var form = join([v("ptype"), v("ptype") && v("pterm") ? "・" : "", v("pterm")]);
+      var l1 = join([v("pname"), form ? "（" + form + "）" : "", v("price") ? "　" + v("price") : ""]);
+      var l2 = v("bonus") ? "ついてくるもの：" + tail(v("bonus")) : "";
+      var l3 = v("pother") ? "ほかに：" + tail(v("pother")) : "";
+      return lines([l1, l2, l3]);
+    }
+    if(sec === 8){
+      var l1 = "";
+      if(v("chgterm") && v("chg")){ l1 = tail(v("chgterm")) + "で、" + tail(v("chg")) + "。"; }
+      else if(v("chg")){ l1 = tail(v("chg")) + "。"; }
+      var l2 = v("voice") ? "そのとき言われた言葉は「" + tail(v("voice")) + "」でした。" : "";
+      var l3 = v("num") ? "数字にすると、" + tail(v("num")) + "。" : "";
+      return lines([l1, l2, l3]);
+    }
+    return "";
+  }
+
+  var SECS = [
+    {n:1, title:"1｜セルフプロモーション", items:[
+      ["name","名前"],["title","肩書き"],["offer","何をする人か"],["scene","役に立つ場面"]]},
+    {n:2, title:"2｜ペルソナ（届けたい相手）", items:[
+      ["age","年代"],["stand","立場"],["trouble","困っていること"],["words","その方の言葉"],
+      ["tried","試したこと"],["stuck","変わらなかった理由"]]},
+    {n:3, title:"3｜パーパス（この仕事をする理由）", items:[
+      ["start","きっかけ"],["mypain","自分のつまずき"],["hope","どうなってほしいか"],["future","1年後"]]},
+    {n:4, title:"4｜あなたの強み", items:[
+      ["said","よく言われること"],["diff","違うやり方"],["good","得意なこと"]]},
+    {n:5, title:"5｜プロフィール", items:[
+      ["years","続けている年数"],["lic","資格・学んできたもの"],["before","前の仕事や経験"]]},
+    {n:7, title:"7｜プロダクト（商品と金額）", items:[
+      ["pname","商品の名前"],["ptype","形"],["pterm","期間と回数"],["price","金額"],
+      ["bonus","ついてくるもの"],["pother","ほかの商品"]]},
+    {n:8, title:"8｜成果事例", items:[
+      ["chg","お客様に起きた変化"],["chgterm","かかった期間"],["voice","言われた言葉"],["num","数字"]]}
+  ];
+
+  function sheetText(){
+    var out = ["私のビジネス設計図", ""];
+    SECS.forEach(function(s){
+      out.push("## " + s.title);
+      var body = compose(s.n);
+      if(body && body.length){ out.push(body); out.push(""); }
+      s.items.forEach(function(it){
+        var val = (data[it[0]] && data[it[0]].length) ? data[it[0]] : "（まだ）";
+        out.push("- " + it[1] + "：" + val);
+      });
+      out.push("");
+      if(s.n === 5){
+        out.push("## 6｜現在の動線");
+        out.push("この欄は、講座や個別相談で一緒に決めます。");
+        out.push("");
+      }
+    });
+    out.push("---");
+    out.push("この1枚は、AIとの会話のいちばん最初に貼って使います。");
+    out.push("直したところは、この1枚のほうも直してください。");
+    return out.join("\n");
+  }
+
+  function promptText(){
+    return [
+      "あなたは、私の発信を手伝うAIです。",
+      "下の「私のビジネス設計図」を読んで、7つ作ってください。",
+      "",
+      "1　整えた「私のビジネス設計図」",
+      "　　1から8までのまとまりを、全部そのまま残します。",
+      "　　番号と見出しも、そのまま使ってください。",
+      "　　それぞれ2行から4行の文章に整えてください。",
+      "　　項目の一覧は、文章のあとに残してください。",
+      "",
+      "2　プロフィール文（200字）",
+      "",
+      "3　自己紹介の1行（40字）",
+      "",
+      "4　お客様への案内文（300字）",
+      "",
+      "5　私が言葉にできていないところ",
+      "　　私の短い答えの奥にある思いを読み取って、",
+      "　　言い方の案を3つ出してください。",
+      "　　「〜ということではないでしょうか」の形で書き、",
+      "　　私が選べる形にしてください。",
+      "",
+      "6　お客様の心の声を3つ",
+      "　　私が書いた困りごとから、",
+      "　　その方が言いそうな言葉を、そのまま出してください。",
+      "",
+      "7　まだ足りていないところを3つ。",
+      "　　それぞれに、埋めるための質問を1つずつ。",
+      "",
+      "守ってほしいこと",
+      "・事実として書くのは、私が答えたことだけ",
+      "・読み取ったことは、5と6にだけ書く",
+      "・「（まだ）」のところは、無いものとして書く",
+      "・むずかしい言葉を使わない",
+      "・1行は15字から25字で折り返す",
+      "・そのままコピーして使える形で出す",
+      "",
+      "----",
+      "",
+      sheetText()
+    ].join("\n");
+  }
+
+  function gaps(){
+    var list = [];
+    QS.forEach(function(q){ if(!data[q.id] || !data[q.id].length){ list.push(q); } });
+    return list.slice(0,3);
+  }
+
+  function result(){
+    var box = $("sheet");
+    box.innerHTML = "";
+    SECS.forEach(function(s){
+      var h = document.createElement("h2");
+      h.className = "sec"; h.textContent = s.title;
+      box.appendChild(h);
+      var body = compose(s.n);
+      if(body && body.length){
+        var p = document.createElement("p");
+        p.className = "val";
+        p.textContent = body;
+        box.appendChild(p);
+      }
+      s.items.forEach(function(it){
+        var val = (data[it[0]] && data[it[0]].length) ? data[it[0]] : "（まだ）";
+        var row = document.createElement("p");
+        row.className = "item";
+        var lab = document.createElement("span");
+        lab.className = "lab";
+        lab.textContent = it[1];
+        var sp = document.createElement("span");
+        sp.textContent = val;
+        if(val === "（まだ）"){ sp.className = "empty"; }
+        row.appendChild(lab);
+        row.appendChild(sp);
+        box.appendChild(row);
+      });
+      if(s.n === 5){
+        var h6 = document.createElement("h2");
+        h6.className = "sec"; h6.textContent = "6｜現在の動線";
+        box.appendChild(h6);
+        var p6 = document.createElement("p");
+        p6.className = "val note";
+        p6.textContent = "この欄は、講座や個別相談で一緒に決めます。";
+        box.appendChild(p6);
+      }
+    });
+
+    var g = gaps(), gb = $("gaps");
+    gb.innerHTML = "";
+    if(g.length === 0){ $("gapbox").classList.add("hide"); }
+    else{
+      $("gapbox").classList.remove("hide");
+      g.forEach(function(q){
+        var sp = document.createElement("span");
+        sp.className = "gap"; sp.textContent = q.q;
+        gb.appendChild(sp);
+      });
+    }
+    $("mailbox").classList.add("hide");
+    show("result");
+  }
+
+  function copyText(txt, msg){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ toast(msg); },
+        function(){ fallback(txt, msg); });
+    }else{ fallback(txt, msg); }
+  }
+  function fallback(txt, msg){
+    var ta = document.createElement("textarea");
+    ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); toast(msg); }
+    catch(e){ toast("長押しでコピーしてください"); }
+    document.body.removeChild(ta);
+  }
+
+  // ---- 動かす ----
+  data = load();
+  show("start");
+  if(Object.keys(data).length){ $("resume").classList.remove("hide"); }
+  if(!storeOK){ $("nostore").classList.remove("hide"); }
+
+  $("keepnow").addEventListener("click", function(){
+    keep();
+    copyText(exportText(), "保存用の文をコピーしました");
+  });
+  $("openload").addEventListener("click", function(){
+    $("loadbox").classList.toggle("hide");
+  });
+  $("doload").addEventListener("click", function(){
+    var got = importText($("loadtext").value || "");
+    if(!got){ toast("保存用の文が読み取れませんでした"); return; }
+    data = got; save();
+    i = 0;
+    for(var k=0;k<QS.length;k++){ if(!data[QS[k].id]){ i = k; break; } i = k; }
+    draw(); show("quiz");
+    toast("つづきから再開します");
+  });
+
+  $("go").addEventListener("click", function(){ i = 0; draw(); show("quiz"); });
+  $("resume").addEventListener("click", function(){
+    i = 0;
+    for(var k=0;k<QS.length;k++){ if(!data[QS[k].id]){ i = k; break; } i = k; }
+    draw(); show("quiz");
+  });
+  $("next").addEventListener("click", function(){ keep(); forward(); });
+  $("back").addEventListener("click", function(){ keep(); if(i > 0){ i--; draw(); } });
+  $("skip").addEventListener("click", function(){ keep(); forward(); });
+
+  $("again").addEventListener("click", function(){
+    if(!window.confirm("書いたものを消して、はじめから書き直します。よろしいですか？")){ return; }
+    data = {};
+    try{ localStorage.removeItem(KEY); }catch(e){}
+    i = 0; show("start"); $("resume").classList.add("hide");
+  });
+
+  $("copy").addEventListener("click", function(){ copyText(sheetText(), "コピーしました"); });
+  $("polish").addEventListener("click", function(){
+    copyText(promptText(), "指示文つきでコピーしました");
+  });
+
+  $("save").addEventListener("click", function(){
+    var blob = new Blob([sheetText()], {type:"text/plain;charset=utf-8"});
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "私のビジネス設計図.txt";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+  });
+
+  $("mail").addEventListener("click", function(){
+    var txt = sheetText();
+    var name = v("name") ? v("name").split("\n")[0] : "";
+    var sub = "私のビジネス設計図を見てください" + (name ? "（" + name + "）" : "");
+    var body = (txt.length > 1200) ? "私のビジネス設計図を貼り付けます。\n\n" : txt;
+    $("mailto").setAttribute("href",
+      "mailto:info@belle-coach.com?subject=" + encodeURIComponent(sub) +
+      "&body=" + encodeURIComponent(body));
+    $("mailbox").classList.remove("hide");
+    copyText(txt, "1枚をコピーしました");
+    $("mailbox").scrollIntoView({behavior:"smooth", block:"center"});
+  });
+  $("copyaddr").addEventListener("click", function(){
+    copyText("info@belle-coach.com", "あて先をコピーしました");
+  });
+
+})();
+</script>
+</body>
+</html>

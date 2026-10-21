@@ -158,20 +158,37 @@
       プロフィール文・自己紹介・案内文が返ってきます。
     </p>
     <button class="btn sub" id="save">テキストで保存する</button>
-    <button class="btn sub" id="mail">雪野に見てもらう</button>
-
-    <div class="card hide" id="mailbox" style="margin-top:10px;">
-      <p style="margin:0 0 8px;font-weight:600;">1枚をコピーしました</p>
-      <p style="margin:0 0 12px;">
-        下のボタンで、メールの下書きが開きます。<br>
-        本文が空のときは、そのまま貼り付けてください。
+    <div class="card" id="seminar" style="margin-top:22px;border:2px solid #16205c;">
+      <p style="margin:0 0 10px;font-weight:700;font-size:1.05em;">
+        この1枚を入れると、AIはどう変わる？
       </p>
-      <a class="btn" id="mailto" href="#" style="text-decoration:none;text-align:center;">メールアプリで開く</a>
-      <p class="muted" style="margin:12px 0 0;">
-        開かないときは、こちらへお送りください。<br>
-        info@belle-coach.com
+      <p style="margin:0 0 10px;">
+        同じ頼み方でも、<br>
+        何も入っていないAIと、<br>
+        この1枚を入れたAIでは、<br>
+        出てくる文章がまるで違います。
       </p>
-      <button class="btn sub" id="copyaddr" style="margin-top:8px;">あて先をコピーする</button>
+      <p style="margin:0 0 10px;">
+        その違いを、<br>
+        90分の無料セミナーで、<br>
+        私の画面でそのままお見せします＾＾
+      </p>
+      <div id="seminar-open">
+        <p style="margin:0 0 10px;font-weight:600;">
+          10月25日（日）21:00〜22:30<br>
+          <span class="muted" style="font-weight:400;">Zoom・参加費無料</span>
+        </p>
+        <p class="muted" style="margin:0 0 14px;">
+          作った1枚は、<br>
+          「テキストで保存する」で<br>
+          残しておいてくださいね。
+        </p>
+        <a class="btn" href="https://www.agentmail.jp/lp/r/25642/197265/" target="_blank" rel="noopener"
+           style="text-decoration:none;text-align:center;display:block;">5分のダイジェストを見て申し込む</a>
+      </div>
+      <p class="hide" id="seminar-next" style="margin:0;font-weight:600;">
+        次の日程は、メールでご案内します＾＾
+      </p>
     </div>
 
     <div class="card lav" style="margin-top:22px;">
@@ -184,22 +201,6 @@
         やり方は、ご一緒にお渡ししている<br>
         「第2の脳 Obsidianの育て方」に書いています。
       </p>
-    </div>
-
-    <div class="card" style="margin-top:22px;border:2px solid #16205c;">
-      <p style="margin:0 0 10px;font-weight:700;font-size:1.05em;">
-        アプリで作ったビジネス設計図を、毎日の仕事で動かしてみませんか？
-      </p>
-      <p style="margin:0 0 10px;">
-        90分の無料セミナーで、その設計図をAIに渡して、<br>
-        メルマガ・台本・概要欄を作るところまでお見せします。
-      </p>
-      <p class="muted" style="margin:0 0 14px;">
-        Zoom・参加費無料・90分・各回5名まで<br>
-        10月6日（火）10:00〜ほか、全4回（内容は同じです）
-      </p>
-      <a class="btn" href="https://www.agentmail.jp/form/ht/74344/2/" target="_blank" rel="noopener"
-         style="text-decoration:none;text-align:center;display:block;">セミナーの日程を見る</a>
     </div>
 
     <footer>
@@ -597,7 +598,6 @@
         gb.appendChild(sp);
       });
     }
-    $("mailbox").classList.add("hide");
     show("result");
   }
 
@@ -670,21 +670,12 @@
     setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
   });
 
-  $("mail").addEventListener("click", function(){
-    var txt = sheetText();
-    var name = v("name") ? v("name").split("\n")[0] : "";
-    var sub = "私のビジネス設計図を見てください" + (name ? "（" + name + "）" : "");
-    var body = (txt.length > 1200) ? "私のビジネス設計図を貼り付けます。\n\n" : txt;
-    $("mailto").setAttribute("href",
-      "mailto:info@belle-coach.com?subject=" + encodeURIComponent(sub) +
-      "&body=" + encodeURIComponent(body));
-    $("mailbox").classList.remove("hide");
-    copyText(txt, "1枚をコピーしました");
-    $("mailbox").scrollIntoView({behavior:"smooth", block:"center"});
-  });
-  $("copyaddr").addEventListener("click", function(){
-    copyText("info@belle-coach.com", "あて先をコピーしました");
-  });
+  // セミナーの日程が過ぎたら、次回のご案内に切りかえる（日本時間 10/25 22:30 まで表示）
+  var SEMINAR_END = new Date("2026-10-25T22:30:00+09:00");
+  if(new Date() > SEMINAR_END){
+    $("seminar-open").classList.add("hide");
+    $("seminar-next").classList.remove("hide");
+  }
 
 })();
 </script>
